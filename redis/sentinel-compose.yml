@@ -1,0 +1,62 @@
+services:
+  redis-sentinel-1:
+    image: redis:alpine
+    container_name: redis-sentinel-1
+    command: >
+      sh -c "mkdir -p /etc/redis &&
+             echo 'sentinel monitor mymaster redis-master 6379 2' > /etc/redis/sentinel.conf &&
+             echo 'sentinel resolve-hostnames yes' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel announce-ip 127.0.0.1' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel announce-port 26379' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel down-after-milliseconds mymaster 5000' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel failover-timeout mymaster 60000' >> /etc/redis/sentinel.conf &&
+             cat /etc/redis/sentinel.conf &&
+             redis-server /etc/redis/sentinel.conf --sentinel"
+    ports:
+      - "26379:26379"
+    depends_on:
+      - redis-master
+    networks:
+      - redis-net
+
+  redis-sentinel-2:
+    image: redis:alpine
+    container_name: redis-sentinel-2
+    command: >
+      sh -c "mkdir -p /etc/redis &&
+             echo 'sentinel monitor mymaster redis-master 6379 2' > /etc/redis/sentinel.conf &&
+             echo 'sentinel resolve-hostnames yes' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel announce-ip 127.0.0.1' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel announce-port 26380' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel down-after-milliseconds mymaster 5000' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel failover-timeout mymaster 60000' >> /etc/redis/sentinel.conf &&
+             redis-server /etc/redis/sentinel.conf --sentinel"
+    ports:
+      - "26380:26379"
+    depends_on:
+      - redis-master
+    networks:
+      - redis-net
+
+  redis-sentinel-3:
+    image: redis:alpine
+    container_name: redis-sentinel-3
+    command: >
+      sh -c "mkdir -p /etc/redis &&
+             echo 'sentinel monitor mymaster redis-master 6379 2' > /etc/redis/sentinel.conf &&
+             echo 'sentinel resolve-hostnames yes' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel announce-ip 127.0.0.1' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel announce-port 26381' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel down-after-milliseconds mymaster 5000' >> /etc/redis/sentinel.conf &&
+             echo 'sentinel failover-timeout mymaster 60000' >> /etc/redis/sentinel.conf &&
+             redis-server /etc/redis/sentinel.conf --sentinel"
+    ports:
+      - "26381:26379"
+    depends_on:
+      - redis-master
+    networks:
+      - redis-net
+
+networks:
+  redis-net:
+    driver: bridge

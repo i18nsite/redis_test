@@ -1,0 +1,41 @@
+include:
+  - sentinel-compose.yml
+
+services:
+  redis-master:
+    image: apache/kvrocks:latest
+    container_name: redis-master
+    ports:
+      - "6379:6379"
+    networks:
+      - redis-net
+    volumes:
+      - ./kvrocks-master.conf:/var/lib/kvrocks/kvrocks.conf
+
+  redis-slave-1:
+    image: apache/kvrocks:latest
+    container_name: redis-slave-1
+    ports:
+      - "6380:6379"
+    depends_on:
+      - redis-master
+    networks:
+      - redis-net
+    volumes:
+      - ./kvrocks-slave-1.conf:/var/lib/kvrocks/kvrocks.conf
+
+  redis-slave-2:
+    image: apache/kvrocks:latest
+    container_name: redis-slave-2
+    ports:
+      - "6381:6379"
+    depends_on:
+      - redis-master
+    networks:
+      - redis-net
+    volumes:
+      - ./kvrocks-slave-2.conf:/var/lib/kvrocks/kvrocks.conf
+
+networks:
+  redis-net:
+    driver: bridge
