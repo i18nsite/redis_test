@@ -1,3 +1,7 @@
+```
+git clone https://github.com/i18nsite/redis_test.git
+```
+
 如下图
 
 ![](https://i-01.eu.org/1764647931.avif)
